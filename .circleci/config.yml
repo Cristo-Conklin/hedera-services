@@ -1493,8 +1493,8 @@ workflows:
             context: SonarCloud
             filters:
               branches:
-                only:
-                  - Disable-master
+                ignore:
+                  - /.*-PERF/
             workflow-name: "Continuous integration"
 
         - build-platform-and-services:
