@@ -1496,7 +1496,6 @@ workflows:
                 ignore:
                   - /.*-PERF/
             workflow-name: "Continuous integration"
-
         - build-platform-and-services:
             context: SonarCloud
             requires:
@@ -1506,7 +1505,6 @@ workflows:
                 ignore:
                   - /.*-PERF/
             workflow-name: "Continuous integration GCP"
-
         - run-continuous-integration-gcp:
             context: Slack
             requires:
@@ -2076,11 +2074,11 @@ jobs:
             - "96:47:c4:5c:e7:45:06:c5:26:a5:85:ef:41:22:2f:d6"
             - "14:21:e9:81:1f:ae:df:ec:11:60:4a:49:e0:b9:bb:58"
             - "e7:a6:3e:34:3e:d8:fe:64:2c:7f:b6:57:45:03:44:ac"
-#      - checkout
-#      - run:
-#          name: Build hedera-services repo
-#          command: |
-#                mvn --no-transfer-progress clean install -DskipTests
+      - checkout
+      - run:
+          name: Build hedera-services repo
+          command: |
+                mvn --no-transfer-progress clean install -DskipTests
       - run:
           name: Checkout swirlds-platform repos and build
           command: |
