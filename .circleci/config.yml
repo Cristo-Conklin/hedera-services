@@ -1499,6 +1499,8 @@ workflows:
 
         - build-platform-and-services:
             context: SonarCloud
+            requires:
+              - build-artifact
             filters:
               branches:
                 ignore:
