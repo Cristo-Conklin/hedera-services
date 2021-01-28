@@ -1242,7 +1242,7 @@ workflows:
           requires:
             - fast-build-artifact
           workflow-name: "nightly-simulate-network-outage"
-          infra-branch: services-with-platform070
+          infra-branch: hashgraph-hedera-services
       - run-accessory-tests:
           context: Slack
           requires:
@@ -1310,7 +1310,7 @@ workflows:
           requires:
             - fast-build-artifact
           workflow-name: "feature-update-regression"
-          infra-branch: services-with-platform070
+          infra-branch: hashgraph-hedera-services
           post-steps:
             - save-this-job-client-logs:
                 workflow-name: "feature-update-regression"
@@ -1379,7 +1379,7 @@ workflows:
           requires:
             - fast-build-artifact
           workflow-name: freeze restart
-          infra-branch: services-with-platform070
+          infra-branch: hashgraph-hedera-services
       - run-umbrella-freeze-restart-test:
           context: Slack
           name: freeze-restart-first-round
@@ -1489,13 +1489,13 @@ workflows:
 
   continuous-integration-gcp:
       jobs:
-        - build-artifact:
-            context: SonarCloud
-            filters:
-              branches:
-                ignore:
-                  - /.*-PERF/
-            workflow-name: "Continuous integration"
+#        - build-artifact:
+#            context: SonarCloud
+#            filters:
+#              branches:
+#                ignore:
+#                  - /.*-PERF/
+#            workflow-name: "Continuous integration"
         - build-platform-and-services:
             context: SonarCloud
             requires:
@@ -1520,76 +1520,77 @@ workflows:
                   - /.*-PERF/
                   - /.*-REGRESSION/
 
-#  continuous-integration:
-#    jobs:
-#      - build-artifact:
-#          context: SonarCloud
-#          filters:
-#            branches:
-#              only:
-#                - Disable-master
-#          workflow-name: "Continuous integration"
-#      - start-singlejob-testnet:
-#          context: Slack
-#          requires:
-#            - build-artifact
-#          workflow-name: "Continuous integration"
-#          infra-branch: services-with-platform070
-#      - run-token-scenarios:
-#          context: Slack
-#          requires:
-#            - start-singlejob-testnet
-#          pre-steps:
-#            - attach_workspace:
-#                at: /
-#            - ensure-testnet-for-reruns
-#          post-steps:
-#            - cleanup-rerun-testnet-if-present
-#          workflow-name: "Continuous integration"
-#      - run-file-scenarios:
-#          context: Slack
-#          requires:
-#            - run-token-scenarios
-#          pre-steps:
-#            - attach_workspace:
-#                at: /
-#            - ensure-testnet-for-reruns
-#          post-steps:
-#            - cleanup-rerun-testnet-if-present
-#          workflow-name: "Continuous integration"
-#      - run-consensus-and-crypto-scenarios:
-#          context: Slack
-#          requires:
-#            - run-file-scenarios
-#          pre-steps:
-#            - attach_workspace:
-#                at: /
-#            - run: /repo/.circleci/scripts/echo-env.sh
-#            - ensure-testnet-for-reruns
-#          post-steps:
-#            - cleanup-rerun-testnet-if-present
-#          workflow-name: "Continuous integration"
-#      - run-smart-contract-scenarios:
-#          context: Slack
-#          requires:
-#            - run-consensus-and-crypto-scenarios
-#          pre-steps:
-#            - attach_workspace:
-#                at: /
-#            - ensure-testnet-for-reruns
-#          post-steps:
-#            - send-report-to-slack:
-#                workflow-name: "Continuous integration"
-#                status: Passed
-#            - cleanup-rerun-testnet-if-present
-#          workflow-name: "Continuous integration"
-#      - cleanup-singlejob-testnet:
-#          context: Slack
-#          requires:
-#            - run-smart-contract-scenarios
-#          pre-steps:
-#            - attach_workspace:
-#                at: /
+  continuous-integration:
+    jobs:
+      - build-artifact:
+          context: SonarCloud
+          filters:
+            branches:
+              ignore:
+                - /.*-PERF/
+                - /.*-REGRESSION/
+          workflow-name: "Continuous integration"
+      - start-singlejob-testnet:
+          context: Slack
+          requires:
+            - build-artifact
+          workflow-name: "Continuous integration"
+          infra-branch: hashgraph-hedera-services
+      - run-token-scenarios:
+          context: Slack
+          requires:
+            - start-singlejob-testnet
+          pre-steps:
+            - attach_workspace:
+                at: /
+            - ensure-testnet-for-reruns
+          post-steps:
+            - cleanup-rerun-testnet-if-present
+          workflow-name: "Continuous integration"
+      - run-file-scenarios:
+          context: Slack
+          requires:
+            - run-token-scenarios
+          pre-steps:
+            - attach_workspace:
+                at: /
+            - ensure-testnet-for-reruns
+          post-steps:
+            - cleanup-rerun-testnet-if-present
+          workflow-name: "Continuous integration"
+      - run-consensus-and-crypto-scenarios:
+          context: Slack
+          requires:
+            - run-file-scenarios
+          pre-steps:
+            - attach_workspace:
+                at: /
+            - run: /repo/.circleci/scripts/echo-env.sh
+            - ensure-testnet-for-reruns
+          post-steps:
+            - cleanup-rerun-testnet-if-present
+          workflow-name: "Continuous integration"
+      - run-smart-contract-scenarios:
+          context: Slack
+          requires:
+            - run-consensus-and-crypto-scenarios
+          pre-steps:
+            - attach_workspace:
+                at: /
+            - ensure-testnet-for-reruns
+          post-steps:
+            - send-report-to-slack:
+                workflow-name: "Continuous integration"
+                status: Passed
+            - cleanup-rerun-testnet-if-present
+          workflow-name: "Continuous integration"
+      - cleanup-singlejob-testnet:
+          context: Slack
+          requires:
+            - run-smart-contract-scenarios
+          pre-steps:
+            - attach_workspace:
+                at: /
 jobs:
   start-singlejob-testnet:
     parameters:
